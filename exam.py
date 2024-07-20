@@ -64,21 +64,15 @@ elif menu == 'Null Qiymatlar':
     null_counts = df.isnull().sum()
     st.dataframe(null_counts[null_counts > 0].reset_index().rename(columns={'index': 'Ustun', 0: 'Null Qiymatlar'}))
     
-    # Select the column to fill
-    # Select the column to fill
     column_to_fill = st.selectbox('To\'ldiriladigan Ustunni Tanlang', df.columns)
     
-    # Select the grouping column
     grouping_column = st.selectbox('Guruplash uchun Ustunni Tanlang', df.columns)
     
-    # Select filling method
     fill_method = st.selectbox('To\'ldirish Usulini Tanlang', ['Mode', 'Median', 'Mean'])
     
-    # Calculate null values before filling
     null_counts_before = df[column_to_fill].isnull().sum()
     
     if st.button('To\'ldirishni Boshla'):
-        # Fill null values based on the selected method and grouping column
         if fill_method == 'Mode':
             df[column_to_fill] = df.groupby(grouping_column)[column_to_fill].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
         elif fill_method == 'Median':
@@ -86,24 +80,20 @@ elif menu == 'Null Qiymatlar':
         elif fill_method == 'Mean':
             df[column_to_fill] = df.groupby(grouping_column)[column_to_fill].transform(lambda x: x.fillna(x.mean()))
         
-        # Calculate null values after filling
         null_counts_after = df[column_to_fill].isnull().sum()
         
-        # Report the number of unique values before and after
         st.write(f"**To\'ldirishdan oldin**:")
         st.write(f"Null qiymatlar soni: {null_counts_before}")
         
         st.write(f"**To\'ldirishdan keyin**:")
         st.write(f"Null qiymatlar soni: {null_counts_after}")
 
-        # Display the number of unique values before and after filling
         unique_values_before = df[column_to_fill].dropna().nunique()
         df[column_to_fill] = df[column_to_fill].fillna(method='bfill').fillna(method='ffill')
         unique_values_after = df[column_to_fill].nunique()
         
         
 
-        # Plot before and after filling
         fig, ax = plt.subplots(1, 2, figsize=(18, 6))
         
         sns.histplot(df[column_to_fill].dropna(), kde=True, ax=ax[0], color=color_palette[0])
@@ -118,16 +108,13 @@ elif menu == 'Null Qiymatlar':
 
         st.header('Null Qiymatlarni O\'chirish')
     
-    # Select the column to remove null values from
     column_to_remove_nulls = st.selectbox('Null qiymatlarni o\'chirish uchun ustunni tanlang', df.columns)
     
     if st.button('Null Qiymatlarni O\'chirish'):
 
 
-        # Remove rows with null values in the selected column
         df_cleaned = df.dropna(subset=[column_to_remove_nulls])
         
-        # Calculate number of rows before and after removing null values
         rows_before = len(df)
         rows_after = len(df_cleaned)
         
@@ -135,11 +122,9 @@ elif menu == 'Null Qiymatlar':
         st.write(f"**Qatnashuvchi satrlar soni (Tozalashdan oldin)**: {rows_before}")
         st.write(f"**Qatnashuvchi satrlar soni (Tozalashdan keyin)**: {rows_after}")
         
-        # Show a preview of the cleaned data
         st.write("**Tozalangan Ma'lumotlar**:")
         st.dataframe(df_cleaned.head())
 
-        # Plot distribution before and after removing null values
         fig, ax = plt.subplots(1, 2, figsize=(18, 6))
         
         sns.histplot(df[column_to_remove_nulls].dropna(), kde=True, ax=ax[0], color=color_palette[0])
@@ -225,10 +210,8 @@ elif menu == 'Grafiklar':
         satisfaction_order = ["Very High", "High", "Medium", "Low"]
 
 
-        # Order Job Satisfaction Levels
         df['Job Satisfaction'] = pd.Categorical(df['Job Satisfaction'], categories=satisfaction_order, ordered=True)
         
-        # Box Plot for Job Satisfaction by Monthly Income
         fig, ax = plt.subplots(figsize=(12, 8))
         sns.boxplot(x='Monthly Income', y='Job Satisfaction', data=df, ax=ax, palette=color_palette)
         ax.set_title('Oylik Maosh va Ishdagi Mamnuniyat', fontsize=15)
