@@ -138,8 +138,6 @@ elif menu == 'Null Qiymatlar':
         ax[1].set_ylabel('Ta\'siri')
         
         st.pyplot(fig)
-        
-        st.pyplot(fig)
 elif menu == 'Grafiklar':
     st.header('Grafiklar')
     
